@@ -67,3 +67,17 @@ def add_task(request):
         form = TaskForm()
     return render(request, "add_task.html", {"form": form})
 
+def dashboard(request):
+    tasks = Task.objects.filter(user=request.user)
+    total_tasks = tasks.count()
+    completed_tasks = tasks.filter(completed=True).count()
+    pending_tasks = total_tasks - completed_tasks
+
+    context = {
+        "tasks": tasks,
+        "total_tasks": total_tasks,
+        "completed_tasks": completed_tasks,
+        "pending_tasks": pending_tasks,
+    }
+    return render(request, "dashboard.html", context)
+
