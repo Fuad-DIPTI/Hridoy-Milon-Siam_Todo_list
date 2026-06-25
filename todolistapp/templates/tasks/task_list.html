@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+
+{% block title %}All Tasks — TaskFlow{% endblock %}
+{% block nav_tasks %}active{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex align-items-end justify-content-between flex-wrap gap-3">
+            <div>
+                <h1 style="font-size:1.75rem;font-weight:800;margin-bottom:0.15rem;">
+                    <i class="bi bi-list-task text-accent me-2"></i>All Tasks
+                </h1>
+                <p class="text-muted-custom mb-0" style="font-size:0.9rem;">
+                    {{ tasks|length }} task{{ tasks|length|pluralize }} {% if current_filter != 'all' %}· filtered{% endif %}
+                </p>
+            </div>
+            <a href="{% url 'dashboard' %}" class="btn-ghost">
+                <i class="bi bi-plus-lg me-1"></i> Add Task
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Pills -->
+<div class="filter-pills mb-4">
+    <a href="{% url 'task_list' %}" class="filter-pill {% if current_filter == 'all' %}active{% endif %}">
+        <i class="bi bi-grid-3x3-gap me-1"></i> All
+    </a>
+    <a href="{% url 'task_list' %}?status=active" class="filter-pill {% if current_filter == 'active' %}active{% endif %}">
+        <i class="bi bi-circle me-1" style="font-size:0.6rem;vertical-align:middle;"></i> Active
+    </a>
+    <a href="{% url 'task_list' %}?status=completed" class="filter-pill {% if current_filter == 'completed' %}active{% endif %}">
+        <i class="bi bi-check-circle me-1"></i> Completed
+    </a>
+</div>
+
+<!-- Task List -->
+<div class="row">
+    <div class="col-12 col-lg-8 mx-auto">
+
+        <!-- Empty State -->
+        {% if not tasks %}
+        <div class="empty-state card-custom">
+            <div class="empty-icon"><i class="bi bi-search"></i></div>
+            <h3>No tasks found</h3>
+            <p>
+                {% if current_filter == 'completed' %}
+                    You haven't completed any tasks yet. Keep going!
+                {% elif current_filter == 'active' %}
+                    All tasks are completed. Great job!
+                {% else %}
+                    Your task list is empty. Head to the dashboard to add one.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Task Items -->
+        {% for task in tasks %}
+        <div class="task-item {% if task.completed %}completed-task{% endif %}" style="animation-delay:{{ forloop.counter0 }}0.04s;">
+            <!-- Checkbox -->
+            <a href="{% url 'toggle_task' task.id %}" style="text-decoration:none;" title="Toggle complete">
+                <div class="custom-check {% if task.completed %}checked{% endif %}">
+                    {% if task.completed %}<i class="bi bi-check2"></i>{% endif %}
+                </div>
+            </a>
+
+            <!-- Content -->
+            <div class="flex-grow-1" style="min-width:0;">
+                <div class="task-title" style="font-weight:600;font-size:0.92rem;margin-bottom:0.15rem;">
+                    {{ task.title }}
+                </div>
+                {% if task.description %}
+                    <div style="font-size:0.8rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        {{ task.description }}
+                    </div>
+                {% endif %}
+                <div class="d-flex align-items-center gap-3 mt-1" style="font-size:0.72rem;color:var(--text-muted);">
+                    <span><i class="bi bi-clock me-1"></i>{{ task.created_at|date:"M d, Y" }}</span>
+                    {% if task.completed %}
+                        <span style="color:var(--success);"><i class="bi bi-check-circle-fill me-1"></i>Done</span>
+                    {% else %}
+                        <span style="color:var(--warning);"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex gap-1">
+                <a href="{% url 'edit_task' task.id %}" class="btn-ghost" title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+                <form method="POST" action="{% url 'delete_task' task.id %}" onsubmit="return confirm('Delete this task?');" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-danger-ghost" title="Delete">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

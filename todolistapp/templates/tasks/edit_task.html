@@ -1,0 +1,78 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Edit Task — TaskFlow{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-7 col-lg-5">
+        <!-- Back Link -->
+        <a href="{% url 'dashboard' %}" class="d-inline-flex align-items-center gap-1 text-secondary-custom mb-4" style="font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="card-custom">
+            <h5 style="font-weight:700;font-size:1.1rem;margin-bottom:0.25rem;">
+                <i class="bi bi-pencil-square text-accent me-2"></i>Edit Task
+            </h5>
+            <p class="text-muted-custom mb-4" style="font-size:0.85rem;">
+                Update the details below and save your changes.
+            </p>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label-custom">Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <small class="text-danger d-block mt-1" style="font-size:0.8rem;">{{ form.title.errors.0 }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label-custom">Description <span class="text-muted-custom" style="text-transform:none;letter-spacing:0;">(optional)</span></label>
+                    {{ form.description }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-accent flex-grow-1">
+                        <i class="bi bi-check-lg me-2"></i>Save Changes
+                    </button>
+                    <a href="{% url 'dashboard' %}" class="btn-ghost flex-grow-1 text-center" style="padding:0.7rem 1rem;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="card-custom mt-3" style="border-color:rgba(239,68,68,0.2);">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div style="font-weight:600;font-size:0.88rem;color:var(--danger);">
+                        <i class="bi bi-exclamation-triangle me-1"></i> Danger Zone
+                    </div>
+                    <div class="text-muted-custom" style="font-size:0.8rem;">Permanently delete this task.</div>
+                </div>
+                <form method="POST" action="{% url 'delete_task' task.id %}" onsubmit="return confirm('Are you sure you want to delete this task? This cannot be undone.');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-ghost" style="color:var(--danger);border-color:rgba(239,68,68,0.3);">
+                        <i class="bi bi-trash3 me-1"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('input, textarea').forEach(el => {
+        if (!el.classList.contains('form-control-custom')) {
+            el.classList.add('form-control-custom');
+        }
+    });
+</script>
+{% endblock %}

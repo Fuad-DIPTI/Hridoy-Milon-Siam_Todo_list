@@ -2,11 +2,17 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("register/", views.register, name="register"),
-    path("", views.user_login, name="login"),
-    path("logout/", views.user_logout, name="logout"),
-    path("task_list/", views.task_list, name="task_list"),
-    path("add/", views.add_task, name="add_task"),
-    path("dashboard/", views.dashboard, name="dashboard"),
+    # Login / Logout Routes
+    path('accounts/login/', views.UserLoginView.as_view(), name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    
+    # Registration Route
+    path('register/', views.register_view, name='register'),
+    path('tasks/', views.task_list_view, name='task_list'),
+    
+    # Main Application Tasks Routes
+    path('', views.dashboard, name='dashboard'),  # Homepage / Dashboard
+    path('task/toggle/<int:task_id>/', views.toggle_task, name='toggle_task'),
+    path('task/edit/<int:task_id>/', views.edit_task_view, name='edit_task'),
+    path('task/delete/<int:task_id>/', views.delete_task_view, name='delete_task'),
 ]
-

@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Register — TaskFlow{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <a href="{% url 'login' %}" class="navbar-brand-custom d-inline-flex mb-3" style="text-decoration:none;">
+                <span class="brand-icon"><i class="bi bi-check2-square"></i></span>
+                TaskFlow
+            </a>
+            <h1>Create account</h1>
+            <p class="subtitle">Start organizing your tasks today</p>
+        </div>
+
+        <!-- Register Form -->
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="form-label-custom" for="id_username">Username</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    {% for err in form.username.errors %}
+                        <small class="text-danger d-block mt-1" style="font-size:0.8rem;">{{ err }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label-custom" for="id_email">Email Address</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    {% for err in form.email.errors %}
+                        <small class="text-danger d-block mt-1" style="font-size:0.8rem;">{{ err }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Password1 -->
+            <div class="mb-3">
+                <label class="form-label-custom" for="id_password1">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    {% for err in form.password1.errors %}
+                        <small class="text-danger d-block mt-1" style="font-size:0.8rem;">{{ err }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Password2 -->
+            <div class="mb-4">
+                <label class="form-label-custom" for="id_password2">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    {% for err in form.password2.errors %}
+                        <small class="text-danger d-block mt-1" style="font-size:0.8rem;">{{ err }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-accent w-100 py-2 mb-3">
+                <i class="bi bi-person-plus me-2"></i>Create Account
+            </button>
+        </form>
+
+        <!-- Login Link -->
+        <p class="text-center mb-0" style="font-size:0.88rem;color:var(--text-muted);">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-accent fw-semibold" style="text-decoration:none;">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Apply custom styling to all form controls
+    document.querySelectorAll('input').forEach(el => {
+        if (!el.classList.contains('form-control-custom')) {
+            el.classList.add('form-control-custom');
+        }
+    });
+</script>
+{% endblock %}

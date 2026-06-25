@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Login — TaskFlow{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <a href="{% url 'login' %}" class="navbar-brand-custom d-inline-ferlex mb-3" style="text-decoration:none;">
+                <span class="brand-icon"><i class="bi bi-check2-square"></i></span>
+                TaskFlow
+            </a>
+            <h1>Welcome back</h1>
+            <p class="subtitle">Sign in to manage your tasks</p>
+        </div>
+
+        <!-- Error Messages -->
+        {% if form.errors %}
+            <div class="alert-custom alert-error mb-4">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                Invalid username or password. Please try again.
+            </div>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="form-label-custom" for="id_username">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text" style="background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-muted);border-radius:12px 0 0 12px;">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                    <small class="text-danger mt-1 d-block" style="font-size:0.8rem;">{{ form.username.errors.0 }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label class="form-label-custom" for="id_password">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text" style="background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-muted);border-radius:12px 0 0 12px;">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                    {{ form.password }}
+                </div>
+                {% if form.password.errors %}
+                    <small class="text-danger mt-1 d-block" style="font-size:0.8rem;">{{ form.password.errors.0 }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-accent w-100 py-2 mb-3">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+        </form>
+
+        <!-- Register Link -->
+        <p class="text-center mb-0" style="font-size:0.88rem;color:var(--text-muted);">
+            Don't have an account?
+            <a href="{% url 'register' %}" class="text-accent fw-semibold" style="text-decoration:none;">Create one</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Fix Bootstrap input group + form-control styling
+    document.querySelectorAll('.input-group .form-control').forEach(el => {
+        el.classList.add('form-control-custom');
+        el.style.borderRadius = '0 12px 12px 0';
+    });
+</script>
+{% endblock %}
